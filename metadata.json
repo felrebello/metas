@@ -1,0 +1,7 @@
+{
+  "name": "Portal de Acompanhamento Financeiro",
+  "description": "Um dashboard moderno para acompanhar o progresso financeiro em direção a uma meta. Inclui upload de relatórios, visualização de dados históricos, um assistente de IA conversacional usando Gemini Live, anúncios de Text-to-Speech e uma seção de perguntas e respostas com base no Google Search para informações atualizadas.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
