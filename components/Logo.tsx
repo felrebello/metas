@@ -1,10 +1,9 @@
 import React from 'react';
-import logoImg from './logo.png';
 
 const Logo: React.FC = () => {
   return (
     <img
-      src={logoImg}
+      src="/logo.png"
       alt="Nort Radiologia Odontológica Logo"
       style={{ maxWidth: '100%', height: 'auto' }}
     />
