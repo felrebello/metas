@@ -1,28 +1,52 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 
 interface FileUploadProps {
-  onFileUpload: (file: File) => void;
+  onFileUpload: (file: File, shouldReplace: boolean) => void;
   isLoading: boolean;
+  hasExistingData: boolean;
 }
 
-const FileUpload: React.FC<FileUploadProps> = ({ onFileUpload, isLoading }) => {
+const FileUpload: React.FC<FileUploadProps> = ({ onFileUpload, isLoading, hasExistingData }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [shouldReplace, setShouldReplace] = useState(false);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      onFileUpload(file);
+      onFileUpload(file, shouldReplace);
       // Reset the input value to allow uploading the same file again
       event.target.value = '';
     }
   };
-  
+
   const handleClick = () => {
     fileInputRef.current?.click();
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center space-y-3">
+      {hasExistingData && (
+        <div className="w-full bg-base-200 p-3 rounded-lg border border-brand-yellow/30">
+          <label className="flex items-center space-x-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={shouldReplace}
+              onChange={(e) => setShouldReplace(e.target.checked)}
+              className="checkbox checkbox-sm checkbox-warning"
+              disabled={isLoading}
+            />
+            <span className="text-sm text-text-secondary">
+              Substituir dados existentes (limpar antes de importar)
+            </span>
+          </label>
+          {!shouldReplace && (
+            <p className="text-xs text-amber-500 mt-2 ml-6">
+              Os novos dados serão somados aos existentes
+            </p>
+          )}
+        </div>
+      )}
+
       <input
         type="file"
         ref={fileInputRef}
@@ -46,7 +70,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileUpload, isLoading }) => {
           </>
         ) : 'Carregar Relatório'}
       </button>
-      <p className="text-sm text-text-secondary mt-2">Arquivos .xlsx, .xls, .csv ou .txt são aceitos</p>
+      <p className="text-sm text-text-secondary">Arquivos .xlsx, .xls, .csv ou .txt são aceitos</p>
     </div>
   );
 };
