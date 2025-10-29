@@ -16,6 +16,13 @@ const ProgressCircle: React.FC<ProgressCircleProps> = ({ current, target }) => {
   const data = [{ name: 'progress', value: chartPercentage }];
   const formattedCurrent = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(current);
 
+  // Reseta o controle de animação quando a meta deixa de estar batida
+  useEffect(() => {
+    if (!goalReached) {
+      hasTriggeredConfetti.current = false;
+    }
+  }, [goalReached]);
+
   useEffect(() => {
     if (goalReached && !hasTriggeredConfetti.current) {
       hasTriggeredConfetti.current = true;
@@ -49,6 +56,11 @@ const ProgressCircle: React.FC<ProgressCircleProps> = ({ current, target }) => {
           origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
         });
       }, 250);
+
+      // Cleanup: limpa o intervalo se o componente for desmontado antes da animação terminar
+      return () => {
+        clearInterval(interval);
+      };
     }
   }, [goalReached]);
 
