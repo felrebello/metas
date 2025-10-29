@@ -1,9 +1,45 @@
 import React from 'react';
 
-const LOGO_BASE64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABUAAAAGdCAYAAAD7YyY3AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGgAAP+lSURBVEMe/P8/8M//l8//V+j4v3/y/8+f/w+f//df/1/7l/5//s//X8//w9///f+X//3/9l8e/l8c/h8f/98M/y+N/y+F/w+P/w/+//Mv/3//7V/+f//lv/7f/ut/8Pz/6X/8f3/+f//b/+V/+l8c/t8e/t8N/8/n/5//8/+9//V/9T/+v/4v/5f/+H/+H//j/+P/+X/9T/+v/+V/8P//H//j//l/+6/+5f/5f/sv/8X/+P/4f/7f/iv/4f/9f/wv/6v/+f/4f//f/uv/6v/+f/6v/8f/9v/6v/+P/4/+X/+v/+X/4v/5f/8v/9v/5f/4v/4f/9f/8v/5f/+v/6v/9v/4v/4v/7f/iv/+f/4v/5v/6v/6f/9f/4v/6v/+f/4v/7f/iv/+P/4v/7f/mv/8f/6//uv/+P/+3/5f/6//ov/5f/+P/+f/4f/8v/6f/+f/6v/8v/9v/5f/+v/6v/5v/8f/9v/6v/8v/9P/5v/6v/8v/5P/5v/6v/8v/5P/5v/6v/8v/5f/kv/4//q//S/+X/+X/+X/+f/4f/9v/5P/4//5P/5P/4//5f/S/+b/8l/8n/9n/8X/+X/+L/+b/8X/+X/8l/8l/8n/8X/+b/+b/+L/+L/8X/9P/8v/4v/5v/xP/4v/4v/xf/1//xf/0v/i//i//q//S//i//i//q//q//q//i//q//q//q//y//xf/1P/5v/xf/0v/k//k//i//S//i//q//q//S//i//i//S//i//S//i//q//S//i//S//q//S//q//q//i//S//i//q//y//k//k//k//S//i//S//S//i//i//q//S//i//i//S//q//S//i//S//i//i//i//i//i//q//q//S//S//i//i//S//y//k//k//S//i//S//k//k//q//y//k//S//q//S//i//i//q//S//k//q//S//k//q//q//S//i//i//q//y//k//k//S//S//i//S//q//i//S//i//q//q//q//S//i//i//S//i//S//i//q//S//i//S//i//S//S//i//S//S//i//i//q//S//S//i//q//i//q//q//q//q//q//i//q//i//q//i//q//i//S//q//S//i//i//q//S//k//i//q//q//S//k//q//i//i//i//S//i//q//i//q//q//q//S//i//q//q//i//i//i//q//q//i//i//q//i//q//q//i//q//i//i//q//q//q//q//q//i//q//q//i//i//q//q//q//i//q//i//q//q//i//q//q//q//q//q//i//q//q//i//i//q//i//i//i//q//q//i//q//q//i//q//i//i//q//q//i//i//q//i//q//q//q//i//q//q//i//q//i//i//q//q//i//q//q//i//i//q//i//q//q//i//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//i//q//q//i//q//q//q//i//q//q//i//q//q//i//q//q//q//i//q//q//i//q//i//q//q//q//i//q//i//q//i//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//i//q//q//i//q//q//i//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//i//q//q//i//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//i//q//q//i//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//i//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//q//-Nort Radiologia Odontológica';
-
 const Logo: React.FC = () => {
-  return <img src={LOGO_BASE64} alt="Nort Radiologia Odontológica Logo" />;
+  return (
+    <div className="flex items-center gap-2">
+      <svg
+        viewBox="0 0 200 200"
+        className="w-full h-auto"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        {/* Tooth Icon */}
+        <g transform="translate(20, 40)">
+          <path
+            d="M80 10 C60 10, 40 20, 40 40 C40 50, 35 60, 30 80 C25 100, 20 120, 30 130 C35 135, 45 135, 50 130 C55 125, 55 115, 60 105 C65 115, 65 125, 70 130 C75 135, 85 135, 90 130 C100 120, 95 100, 90 80 C85 60, 80 50, 80 40 C80 20, 100 10, 120 10 C140 10, 160 20, 160 40 C160 50, 165 60, 170 80 C175 100, 180 120, 170 130 C165 135, 155 135, 150 130 C145 125, 145 115, 140 105 C135 115, 135 125, 130 130 C125 135, 115 135, 110 130 C100 120, 105 100, 110 80 C115 60, 120 50, 120 40 C120 20, 100 20, 80 20 L80 10"
+            fill="#FCD34D"
+            stroke="#F59E0B"
+            strokeWidth="3"
+          />
+        </g>
+
+        {/* Text */}
+        <text
+          x="100"
+          y="165"
+          textAnchor="middle"
+          className="font-bold"
+          style={{ fontSize: '24px', fill: '#FCD34D' }}
+        >
+          NORT
+        </text>
+        <text
+          x="100"
+          y="188"
+          textAnchor="middle"
+          className="font-semibold"
+          style={{ fontSize: '14px', fill: '#D1D5DB' }}
+        >
+          Radiologia Odontológica
+        </text>
+      </svg>
+    </div>
+  );
 };
 
 export default Logo;
