@@ -12,6 +12,7 @@ import ProgressCircle from './components/ProgressCircle';
 import HistoryChart from './components/HistoryChart';
 import AdminLoginModal from './components/AdminLoginModal';
 import type { ProcedureData, HistoryData } from './types';
+import { loadUnitData, updateTarget as saveTarget, updateCurrentAmount } from './services/dataService';
 
 interface KpiData {
   faturamentoTotal: number;
@@ -40,27 +41,38 @@ const App: React.FC = () => {
   const [revenueByProfessional, setRevenueByProfessional] = useState<ChartRow[]>([]);
   const [topProcedures, setTopProcedures] = useState<ChartRow[]>([]);
 
-  // Load data from localStorage when unit changes
+  // Load data from Firestore when unit changes
   useEffect(() => {
     if (selectedUnit) {
-      const savedTarget = localStorage.getItem(`financialTarget_${selectedUnit}`);
-      setTarget(savedTarget ? JSON.parse(savedTarget) : 6000000);
+      loadUnitData(selectedUnit).then(data => {
+        if (data) {
+          setTarget(data.target || 6000000);
+          setCurrentAmount(data.currentAmount || 0);
+          setHistory(data.history || []);
 
-      const savedAmount = localStorage.getItem(`currentAmount_${selectedUnit}`);
-      const initialAmount = savedAmount ? JSON.parse(savedAmount) : 0;
-      setCurrentAmount(initialAmount);
-
-      const savedHistory = localStorage.getItem(`financialHistory_${selectedUnit}`);
-      setHistory(savedHistory ? JSON.parse(savedHistory) : []);
-      
-      if (initialAmount > 0) {
-        setKpis({ faturamentoTotal: initialAmount, ticketMedio: 0 });
-      } else {
-         setKpis(null);
-      }
-      setRevenueByProfessional([]);
-      setTopProcedures([]);
-      setError(null);
+          if (data.currentAmount > 0) {
+            setKpis({ faturamentoTotal: data.currentAmount, ticketMedio: 0 });
+          } else {
+            setKpis(null);
+          }
+        } else {
+          // Valores padrão se não houver dados salvos
+          setTarget(6000000);
+          setCurrentAmount(0);
+          setHistory([]);
+          setKpis(null);
+        }
+        setRevenueByProfessional([]);
+        setTopProcedures([]);
+        setError(null);
+      }).catch(error => {
+        console.error('Erro ao carregar dados:', error);
+        setError('Erro ao carregar dados salvos. Usando valores padrão.');
+        setTarget(6000000);
+        setCurrentAmount(0);
+        setHistory([]);
+        setKpis(null);
+      });
     }
   }, [selectedUnit]);
   
@@ -77,10 +89,15 @@ const App: React.FC = () => {
   const formatCurrency = (value: number) =>
     new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
 
-  const handleSetTarget = (newTarget: number) => {
+  const handleSetTarget = async (newTarget: number) => {
     if (!selectedUnit) return;
     setTarget(newTarget);
-    localStorage.setItem(`financialTarget_${selectedUnit}`, JSON.stringify(newTarget));
+    try {
+      await saveTarget(selectedUnit, newTarget);
+    } catch (error) {
+      console.error('Erro ao salvar meta:', error);
+      setError('Erro ao salvar a meta. Por favor, tente novamente.');
+    }
   };
 
   const handleFileUpload = useCallback(async (file: File) => {
@@ -133,12 +150,17 @@ const App: React.FC = () => {
       
       const newCurrentAmount = currentAmount + faturamentoDoArquivo;
       setCurrentAmount(newCurrentAmount);
-      localStorage.setItem(`currentAmount_${selectedUnit}`, JSON.stringify(newCurrentAmount));
-      
+
       const month = new Date().toLocaleDateString('pt-BR', { month: 'short', year: '2-digit' }).replace(' de ','/');
       const newHistory = [...history, { month, amount: newCurrentAmount }];
       setHistory(newHistory);
-      localStorage.setItem(`financialHistory_${selectedUnit}`, JSON.stringify(newHistory));
+
+      try {
+        await updateCurrentAmount(selectedUnit, newCurrentAmount, newHistory);
+      } catch (err) {
+        console.error('Erro ao salvar dados no Firestore:', err);
+        // Os dados já estão salvos no localStorage como fallback
+      }
 
       setKpis({ faturamentoTotal: newCurrentAmount, ticketMedio: ticketMedioDoArquivo });
       
