@@ -45,6 +45,16 @@ const App: React.FC = () => {
   // Load data from Firestore when unit changes
   useEffect(() => {
     if (selectedUnit) {
+      // Reseta os dados imediatamente ao trocar de unidade para evitar mostrar dados da unidade anterior
+      setTarget(6000000);
+      setCurrentAmount(0);
+      setHistory([]);
+      setLastUpdated(null);
+      setKpis(null);
+      setRevenueByProfessional([]);
+      setTopProcedures([]);
+      setError(null);
+
       loadUnitData(selectedUnit).then(data => {
         if (data) {
           setTarget(data.target || 6000000);
