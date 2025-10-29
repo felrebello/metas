@@ -100,7 +100,31 @@ const App: React.FC = () => {
     }
   };
 
-  const handleFileUpload = useCallback(async (file: File) => {
+  const handleClearData = async () => {
+    if (!selectedUnit) return;
+
+    const confirmClear = window.confirm(
+      'Tem certeza que deseja limpar todos os dados? Esta ação não pode ser desfeita.'
+    );
+
+    if (!confirmClear) return;
+
+    try {
+      setCurrentAmount(0);
+      setHistory([]);
+      setKpis(null);
+      setRevenueByProfessional([]);
+      setTopProcedures([]);
+
+      await updateCurrentAmount(selectedUnit, 0, []);
+      setError(null);
+    } catch (error) {
+      console.error('Erro ao limpar dados:', error);
+      setError('Erro ao limpar os dados. Por favor, tente novamente.');
+    }
+  };
+
+  const handleFileUpload = useCallback(async (file: File, shouldReplace: boolean = false) => {
     if (!selectedUnit) return;
     setIsProcessing(true);
     setError(null);
@@ -109,7 +133,7 @@ const App: React.FC = () => {
       const workbook = XLSX.read(data);
       const sheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[sheetName];
-      
+
       const jsonData: any[][] = XLSX.utils.sheet_to_json(worksheet, {
         header: 1,
         range: 2,
@@ -118,7 +142,7 @@ const App: React.FC = () => {
       if (jsonData.length < 2) {
         throw new Error("O arquivo parece estar vazio ou não contém dados suficientes.");
       }
-      
+
       const headers: string[] = jsonData[0].map(h => String(h).trim());
       const rows = jsonData.slice(1);
 
@@ -132,7 +156,7 @@ const App: React.FC = () => {
 
       mappedData = mappedData.map(row => ({
           ...row,
-          'Preço': typeof row['Preço'] === 'string' 
+          'Preço': typeof row['Preço'] === 'string'
               ? parseFloat(row['Preço'].replace('R$', '').replace(/\./g, '').replace(',', '.').trim())
               : typeof row['Preço'] === 'number' ? row['Preço'] : 0
       })).filter(row => row['Preço'] && !isNaN(row['Preço']));
@@ -147,12 +171,17 @@ const App: React.FC = () => {
       }
       const totalProcedimentosDoArquivo = cleanedData.length;
       const ticketMedioDoArquivo = totalProcedimentosDoArquivo > 0 ? faturamentoDoArquivo / totalProcedimentosDoArquivo : 0;
-      
-      const newCurrentAmount = currentAmount + faturamentoDoArquivo;
+
+      // Se shouldReplace for true, substitui os dados. Caso contrário, soma
+      const newCurrentAmount = shouldReplace ? faturamentoDoArquivo : currentAmount + faturamentoDoArquivo;
       setCurrentAmount(newCurrentAmount);
 
       const month = new Date().toLocaleDateString('pt-BR', { month: 'short', year: '2-digit' }).replace(' de ','/');
-      const newHistory = [...history, { month, amount: newCurrentAmount }];
+
+      // Se substituir, limpa o histórico e cria novo. Caso contrário, adiciona ao histórico
+      const newHistory = shouldReplace
+        ? [{ month, amount: newCurrentAmount }]
+        : [...history, { month, amount: newCurrentAmount }];
       setHistory(newHistory);
 
       try {
@@ -163,7 +192,7 @@ const App: React.FC = () => {
       }
 
       setKpis({ faturamentoTotal: newCurrentAmount, ticketMedio: ticketMedioDoArquivo });
-      
+
       const revenueByPro = cleanedData.reduce((acc, row) => {
         const name = row['Responsável tecnico'];
         if(name) acc[name] = (acc[name] || 0) + row['Preço'];
@@ -281,12 +310,14 @@ const App: React.FC = () => {
           {/* Sidebar */}
           <aside className="space-y-8">
             {isAdmin && (
-              <AdminPanel 
-                onFileUpload={handleFileUpload} 
+              <AdminPanel
+                onFileUpload={handleFileUpload}
                 isLoading={isProcessing}
                 error={error}
                 currentTarget={target}
                 onSetTarget={handleSetTarget}
+                onClearData={handleClearData}
+                hasExistingData={hasData}
               />
             )}
             <GroundedSearch />
