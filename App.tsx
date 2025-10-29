@@ -33,6 +33,7 @@ const App: React.FC = () => {
   const [target, setTarget] = useState<number>(6000000);
   const [currentAmount, setCurrentAmount] = useState<number>(0);
   const [history, setHistory] = useState<HistoryData[]>([]);
+  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -49,6 +50,7 @@ const App: React.FC = () => {
           setTarget(data.target || 6000000);
           setCurrentAmount(data.currentAmount || 0);
           setHistory(data.history || []);
+          setLastUpdated(data.lastUpdated || null);
 
           if (data.currentAmount > 0) {
             setKpis({ faturamentoTotal: data.currentAmount, ticketMedio: 0 });
@@ -60,6 +62,7 @@ const App: React.FC = () => {
           setTarget(6000000);
           setCurrentAmount(0);
           setHistory([]);
+          setLastUpdated(null);
           setKpis(null);
         }
         setRevenueByProfessional([]);
@@ -71,6 +74,7 @@ const App: React.FC = () => {
         setTarget(6000000);
         setCurrentAmount(0);
         setHistory([]);
+        setLastUpdated(null);
         setKpis(null);
       });
     }
@@ -112,6 +116,7 @@ const App: React.FC = () => {
     try {
       setCurrentAmount(0);
       setHistory([]);
+      setLastUpdated(null);
       setKpis(null);
       setRevenueByProfessional([]);
       setTopProcedures([]);
@@ -251,6 +256,11 @@ const App: React.FC = () => {
               </div>
               <h1 className="text-3xl font-bold text-text-primary tracking-tight">Portal de Acompanhamento</h1>
               <p className="text-text-secondary mt-1">Unidade: <span className="font-semibold text-brand-yellow">{selectedUnit}</span></p>
+              {lastUpdated && (
+                <p className="text-text-secondary text-sm mt-1">
+                  Última atualização: <span className="font-medium">{new Date(lastUpdated).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}</span>
+                </p>
+              )}
             </div>
           </div>
           <button 
@@ -280,7 +290,7 @@ const App: React.FC = () => {
             ) : (
               <>
                 <section className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-base-200 p-6 rounded-lg">
-                  <ProgressCircle current={currentAmount} target={target} />
+                  <ProgressCircle key={selectedUnit} current={currentAmount} target={target} />
                   <div className="space-y-6">
                     {kpis && (
                       <>
